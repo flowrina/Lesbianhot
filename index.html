@@ -1,46 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SakhiTalk – Safe Lesbian Community</title>
 
-<meta name="description" content="Safe 18+ lesbian community for chat, friendship and connection." />
-<meta name="keywords" content="lesbian chat, lesbian community, wlw, lgbtq women" />
-<meta name="robots" content="index, follow" />
+<meta name="description" content="Safe 18+ lesbian community for chat, friendship and connection.">
+<meta name="keywords" content="lesbian chat, lesbian community, wlw, lgbtq women">
+<meta name="robots" content="index, follow">
 
 <style>
 :root{--pink:#e91e63;--purple:#673ab7;--bg:#f3f3f3}
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial;background:var(--bg)}
-header{background:var(--pink);color:#fff;padding:12px;display:flex;justify-content:space-between;align-items:center}
+header{background:var(--pink);color:#fff;padding:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
 header a{color:#fff;text-decoration:none;margin-left:10px}
-main{max-width:720px;margin:auto;padding:12px}
+.badge{background:#ffebee;color:#c62828;padding:4px 10px;border-radius:12px;font-size:12px}
+.online{background:#e8f5e9!important;color:#2e7d32!important}
+main{max-width:760px;margin:auto;padding:12px}
 .card{background:#fff;border-radius:8px;padding:12px;margin-top:12px}
 button{background:var(--purple);color:#fff;border:0;border-radius:6px;padding:8px 12px;cursor:pointer}
 input,textarea{width:100%;padding:8px;margin-top:6px}
 textarea{resize:vertical}
 .small{font-size:12px;color:#666}
-.post{border-top:1px solid #eee;padding-top:8px;margin-top:8px}
-.row{display:flex;gap:8px;flex-wrap:wrap}
 .hidden{display:none}
-
-/* overlay */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:9}
-.box{background:#fff;border-radius:10px;padding:20px;text-align:center;max-width:320px}
-
-/* chat */
+.post{border-top:1px solid #eee;margin-top:10px;padding-top:8px}
 .chat{border:1px solid #eee;border-radius:8px;height:180px;overflow:auto;padding:8px}
 .msg{margin:4px 0}
 .me{color:var(--pink)}
-.admin{color:#c62828}
-.badge{background:#eee;border-radius:10px;padding:2px 8px;font-size:12px}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:9}
+.box{background:#fff;border-radius:10px;padding:20px;text-align:center;max-width:320px}
 </style>
 </head>
 
 <body>
 
-<!-- Age Gate -->
+<!-- AGE GATE -->
 <div id="ageGate" class="overlay">
   <div class="box">
     <h3>🔞 Age Verification</h3>
@@ -51,40 +46,40 @@ textarea{resize:vertical}
 
 <header>
   <strong>🌈 SakhiTalk</strong>
-  <nav>
+  <div>
+    <span id="liveStatus" class="badge">🔴 Offline</span>
     <a href="#" onclick="view('home')">Home</a>
     <a href="#" onclick="view('chat')">Chat</a>
     <a href="#" onclick="view('profile')">Profile</a>
     <a href="#" onclick="logout()">Logout</a>
-  </nav>
+  </div>
 </header>
 
 <main>
 
-<!-- AUTH -->
+<!-- LOGIN -->
 <section id="auth" class="card">
   <h3>Login / Register</h3>
-  <input id="username" placeholder="Username (women only)" />
-  <label class="small"><input type="checkbox" id="isAdmin"/> Admin (demo)</label>
+  <input id="username" placeholder="Username (women only)">
   <button onclick="login()">Enter</button>
+  <p class="small">No men • Respect • Privacy-first</p>
 </section>
 
-<!-- HOME / FEED -->
+<!-- HOME -->
 <section id="home" class="hidden">
   <div class="card">
     <textarea id="postText" placeholder="Share your thoughts respectfully..."></textarea>
     <button onclick="addPost()">Post</button>
-    <p class="small">Rules: No men • No harassment • Respect privacy</p>
   </div>
   <div id="feed"></div>
 </section>
 
-<!-- CHAT (PRIVATE DEMO) -->
+<!-- CHAT -->
 <section id="chat" class="hidden">
   <div class="card">
-    <h3>Private Chat (Demo)</h3>
+    <h3>Live Chat (Demo)</h3>
     <div id="chatBox" class="chat"></div>
-    <input id="chatInput" placeholder="Type message..." />
+    <input id="chatInput" placeholder="Type message...">
     <button onclick="sendMsg()">Send</button>
   </div>
 </section>
@@ -93,33 +88,24 @@ textarea{resize:vertical}
 <section id="profile" class="hidden">
   <div class="card">
     <h3 id="pname"></h3>
-    <span class="badge">Lesbian Community Member</span>
-    <p class="small">Privacy-first • Anonymous • 18+</p>
+    <p class="small">Lesbian community member • 18+</p>
   </div>
 
   <div class="card">
     <h4>Safety</h4>
-    <input id="blockUser" placeholder="Block username" />
-    <button onclick="block()">Block</button>
-    <input id="reportText" placeholder="Report issue (text)" />
-    <button onclick="report()">Report</button>
-  </div>
-
-  <div id="adminPanel" class="card hidden">
-    <h4>Admin Panel</h4>
-    <button onclick="clearPosts()">Clear All Posts</button>
+    <input id="blockUser" placeholder="Block username">
+    <button onclick="blockUserFn()">Block</button>
   </div>
 </section>
 
 </main>
 
 <script>
-/* utils */
+/* helpers */
 const $=id=>document.getElementById(id);
 const store=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
 const load=(k,d)=>JSON.parse(localStorage.getItem(k)||JSON.stringify(d));
 
-/* state */
 let user=null;
 let posts=load('posts',[]);
 let msgs=load('msgs',[]);
@@ -132,64 +118,86 @@ function enterSite(){ $('ageGate').classList.add('hidden'); }
 function login(){
   const u=$('username').value.trim();
   if(!u) return alert('Enter username');
-  user={name:u, admin:$('isAdmin').checked};
+  user={name:u};
   store('user',user);
   $('auth').classList.add('hidden');
   view('home');
+  liveCheck();
   render();
 }
 function logout(){ localStorage.clear(); location.reload(); }
-(function init(){
+
+/* init */
+(function(){
   const u=load('user',null);
-  if(u){ user=u; $('auth').classList.add('hidden'); view('home'); render(); }
+  if(u){ user=u; $('auth').classList.add('hidden'); view('home'); liveCheck(); render(); }
 })();
 
 /* navigation */
 function view(v){
   ['home','chat','profile'].forEach(s=>$(s).classList.add('hidden'));
   $(v).classList.remove('hidden');
-  if(v==='profile'){ $('pname').innerText='👩 '+user.name; if(user.admin) $('adminPanel').classList.remove('hidden'); }
+  if(v==='profile') $('pname').innerText='👩 '+user.name;
 }
 
 /* feed */
 function addPost(){
   const t=$('postText').value.trim(); if(!t) return;
-  posts.push({u:user.name,t,ts:Date.now()});
-  store('posts',posts); $('postText').value=''; render();
+  posts.push({u:user.name,t});
+  store('posts',posts);
+  $('postText').value='';
+  render();
 }
 function render(){
-  const f=$('feed'); if(!f) return; f.innerHTML='';
-  posts.slice().reverse().forEach((p,i)=>{
-    if(blocked.includes(p.u)) return;
-    const d=document.createElement('div');
-    d.className='card post';
-    d.innerHTML=`<strong>${p.u}</strong><p>${p.t}</p>
-      <button onclick="report('${p.u}')">Report</button>
-      ${user.admin?`<button onclick="del(${i})">Delete</button>`:''}`;
-    f.appendChild(d);
-  });
-  store('msgs',msgs);
+  const f=$('feed'); if(f){
+    f.innerHTML='';
+    posts.slice().reverse().forEach(p=>{
+      if(blocked.includes(p.u)) return;
+      const d=document.createElement('div');
+      d.className='card post';
+      d.innerHTML=`<strong>${p.u}</strong><p>${p.t}</p>`;
+      f.appendChild(d);
+    });
+  }
   $('chatBox').innerHTML=msgs.map(m=>`<div class="msg ${m.u===user.name?'me':''}">${m.u}: ${m.t}</div>`).join('');
 }
-function del(i){ posts.splice(i,1); store('posts',posts); render(); }
-function clearPosts(){ if(confirm('Clear all?')){ posts=[]; store('posts',posts); render(); }}
 
 /* chat */
 function sendMsg(){
   const t=$('chatInput').value.trim(); if(!t) return;
-  msgs.push({u:user.name,t}); $('chatInput').value=''; render();
+  msgs.push({u:user.name,t});
+  store('msgs',msgs);
+  $('chatInput').value='';
+  render();
 }
 
-/* safety */
-function block(){
-  const u=$('blockUser').value.trim(); if(!u) return;
+/* block */
+function blockUserFn(){
+  const u=$('blockUser').value.trim();
+  if(!u) return;
   if(!blocked.includes(u)) blocked.push(u);
-  store('blocked',blocked); alert('Blocked'); render();
+  store('blocked',blocked);
+  alert('User blocked');
+  render();
 }
-function report(u){
-  const r=$('reportText').value||('Reported user: '+u);
-  alert('Reported. Admin will review.\n'+r);
+
+/* LIVE CHECK (demo) */
+function liveCheck(){
+  let users=load('onlineUsers',[]);
+  if(!users.includes(user.name)){
+    users.push(user.name);
+    store('onlineUsers',users);
+  }
+  const s=$('liveStatus');
+  s.innerText=`🟢 Live (${users.length} online)`;
+  s.classList.add('online');
 }
+window.addEventListener('beforeunload',()=>{
+  let users=load('onlineUsers',[]);
+  users=users.filter(u=>!user||u!==user.name);
+  store('onlineUsers',users);
+});
 </script>
+
 </body>
 </html>
