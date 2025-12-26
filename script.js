@@ -1,29 +1,52 @@
+// Age Gate
 function enterSite() {
   document.getElementById("ageGate").style.display = "none";
 }
 
-// Load saved posts
-let posts = JSON.parse(localStorage.getItem("posts")) || [];
-
-function renderPosts() {
-  const feed = document.getElementById("feed");
-  feed.innerHTML = "";
-  posts.forEach(post => {
-    const div = document.createElement("div");
-    div.className = "post";
-    div.innerText = post;
-    feed.prepend(div);
-  });
+// Login
+function login() {
+  const username = document.getElementById("username").value;
+  if (!username) return alert("Enter username");
+  localStorage.setItem("user", username);
+  window.location.href = "index.html";
 }
+
+// Logout
+function logout() {
+  localStorage.removeItem("user");
+  window.location.href = "login.html";
+}
+
+// Profile
+const userName = document.getElementById("userName");
+if (userName) {
+  userName.innerText = "👩 " + (localStorage.getItem("user") || "Guest");
+}
+
+// Posts
+let posts = JSON.parse(localStorage.getItem("posts")) || [];
 
 function addPost() {
   const input = document.getElementById("postInput");
-  if (input.value.trim() === "") return;
+  const user = localStorage.getItem("user") || "Anonymous";
+  if (!input.value.trim()) return;
 
-  posts.push(input.value);
+  posts.push({ user, text: input.value });
   localStorage.setItem("posts", JSON.stringify(posts));
   input.value = "";
   renderPosts();
+}
+
+function renderPosts() {
+  const feed = document.getElementById("feed");
+  if (!feed) return;
+  feed.innerHTML = "";
+  posts.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "post";
+    div.innerHTML = `<strong>${p.user}</strong><br>${p.text}`;
+    feed.prepend(div);
+  });
 }
 
 renderPosts();
