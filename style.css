@@ -1,83 +1,85 @@
-body {
-  font-family: Arial;
+* {
   margin: 0;
-  background: #f2f2f2;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
 
-/* Header */
+body {
+  background: #0f172a;
+  color: #e5e7eb;
+  line-height: 1.6;
+}
+
 header {
-  background: #e91e63;
-  color: white;
-  padding: 15px;
-  display: flex;
-  justify-content: space-between;
+  text-align: center;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #9333ea, #ec4899);
 }
 
-header a {
-  color: white;
-  margin-left: 10px;
+header h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+}
+
+header p {
+  margin: 15px 0;
+  font-size: 1.1rem;
+}
+
+.btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 12px 30px;
+  background: #111827;
+  color: #fff;
   text-decoration: none;
+  border-radius: 30px;
+  font-weight: 500;
 }
 
-/* Age Gate */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-
-.box {
-  background: white;
-  padding: 25px;
-  border-radius: 8px;
-  text-align: center;
-}
-
-/* Main */
-main {
-  max-width: 600px;
+.info {
+  padding: 40px 20px;
+  max-width: 900px;
   margin: auto;
-  padding: 15px;
 }
 
-.post-box textarea {
-  width: 100%;
-  height: 70px;
-}
-
-.post-box button {
-  width: 100%;
-  margin-top: 10px;
-  padding: 10px;
-  background: #673ab7;
-  color: white;
-  border: none;
-}
-
-/* Posts */
-.post {
-  background: white;
-  padding: 10px;
-  margin-top: 15px;
-  border-radius: 5px;
-}
-
-/* Auth */
-.auth-box, .profile {
-  max-width: 300px;
-  margin: 100px auto;
-  background: white;
-  padding: 20px;
+.info h2 {
   text-align: center;
-  border-radius: 8px;
+  margin-bottom: 20px;
 }
 
-input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
+.info ul {
+  list-style: none;
+  text-align: center;
+}
+
+.info li {
+  margin: 10px 0;
+}
+
+.chat-box {
+  padding: 40px 20px;
+  background: #020617;
+}
+
+.chat-box h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.seo-text {
+  padding: 40px 20px;
+  max-width: 900px;
+  margin: auto;
+  font-size: 0.95rem;
+  color: #cbd5f5;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #020617;
+  font-size: 0.85rem;
+  color: #94a3b8;
 }
